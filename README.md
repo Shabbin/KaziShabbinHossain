@@ -227,7 +227,7 @@ const technologies = [
   },
   {
     name: "Three JS",
-    icon: threejs,
+    icon: threejs, //omit
   },
   {
     name: "git",
@@ -235,11 +235,11 @@ const technologies = [
   },
   {
     name: "figma",
-    icon: figma,
+    icon: figma,   
   },
   {
     name: "docker",
-    icon: docker,
+    icon: docker, 
   },
 ];
 
@@ -327,7 +327,7 @@ const testimonials = [
 
 const projects = [
   {
-    name: "Car Rent",
+    name: "Tutogoggy",
     description:
       "Web-based platform that allows users to search, book, and manage car rentals from various providers, providing a convenient and efficient solution for transportation needs.",
     tags: [

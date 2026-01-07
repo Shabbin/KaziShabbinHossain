@@ -202,3 +202,82 @@
       -2.6em 0em 0 0em rgba(255, 255, 255, 0.7), -1.8em -1.8em 0 0em #ffffff;
   }
 }
+
+/* ⚡ contact right-side “signal core” + pills animation */
+
+/* slow spinning dashed ring */
+@keyframes signal-spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.signal-spin-slow {
+  animation: signal-spin-slow 22s linear infinite;
+}
+
+/* pulsing inner ring */
+@keyframes signal-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  70% {
+    transform: scale(1.12);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.12);
+    opacity: 0;
+  }
+}
+
+.signal-pulse {
+  animation: signal-pulse 2.8s ease-out infinite;
+}
+
+/* gentle floating for pills */
+@keyframes signal-float-1 {
+  0%,
+  100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, -8px);
+  }
+}
+
+@keyframes signal-float-2 {
+  0%,
+  100% {
+    transform: translate(0, -50%);
+  }
+  50% {
+    transform: translate(4px, -56%);
+  }
+}
+
+@keyframes signal-float-3 {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-6px, 4px);
+  }
+}
+
+.signal-pill-1 {
+  animation: signal-float-1 4.5s ease-in-out infinite;
+}
+
+.signal-pill-2 {
+  animation: signal-float-2 5.3s ease-in-out infinite;
+}
+
+.signal-pill-3 {
+  animation: signal-float-3 5.8s ease-in-out infinite;
+}

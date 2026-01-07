@@ -1,0 +1,17 @@
+/* Hide scrollbars globally but still allow scrolling */
+html {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+html::-webkit-scrollbar {
+  width: 0px; /* Chrome, Safari, Edge */
+  background: transparent;
+}
+
+/* Make sure scrolling works normally */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-y: scroll;
+}

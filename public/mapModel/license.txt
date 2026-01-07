@@ -1,0 +1,11 @@
+Model Information:
+* title:	Bangladesh Map 3d
+* source:	https://sketchfab.com/3d-models/bangladesh-map-3d-7d14029bfc7543f8bff5476772f03891
+* author:	Shasthojoy (https://sketchfab.com/shasthojoy)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Bangladesh Map 3d" (https://sketchfab.com/3d-models/bangladesh-map-3d-7d14029bfc7543f8bff5476772f03891) by Shasthojoy (https://sketchfab.com/shasthojoy) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
