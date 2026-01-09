@@ -1,11 +1,11 @@
 import React, { useRef, useEffect } from "react";
 
 const Lightning = ({
-  hue = 142,
-  xOffset = 0,
-  speed = 1,
-  intensity = 1,
-  size = 1,
+  hue = 142,       // color hue
+  xOffset = 0,     // horizontal offset
+  speed = 1,       // animation speed
+  intensity = 1,   // brightness
+  size = 1,        // scale of noise
 }) => {
   const canvasRef = useRef(null);
 
@@ -25,59 +25,20 @@ const Lightning = ({
       return;
     }
 
-    // ===============================
-    // CONTEXT LOSS SAFETY (CRITICAL)
-    // ===============================
-    const onContextLost = (e) => {
-      e.preventDefault();
-    };
-
-    const onContextRestored = () => {
-      window.location.reload(); // clean, artifact-free recovery
-    };
-
-    canvas.addEventListener("webglcontextlost", onContextLost);
-    canvas.addEventListener("webglcontextrestored", onContextRestored);
-
-    // ===============================
-    // DPI-LOCKED RESIZE (NEVER PIXELATE)
-    // ===============================
-    let lastDPR = window.devicePixelRatio || 1;
-    const maxSize = gl.getParameter(gl.MAX_RENDERBUFFER_SIZE);
-
+    // DPI-aware resize
     const resizeCanvas = () => {
       const rect = canvas.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
-      lastDPR = dpr;
-
-      const width = Math.min(Math.floor(rect.width * dpr), maxSize);
-      const height = Math.min(Math.floor(rect.height * dpr), maxSize);
-
-      if (canvas.width !== width || canvas.height !== height) {
-        canvas.width = width;
-        canvas.height = height;
-        gl.viewport(0, 0, width, height);
-      }
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+      gl.viewport(0, 0, canvas.width, canvas.height);
     };
-
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    // Detect silent DPR changes (zoom, monitor move, OS scaling)
-    const checkDPR = () => {
-      const dpr = window.devicePixelRatio || 1;
-      if (dpr !== lastDPR) {
-        resizeCanvas();
-      }
-    };
-
-    // 2D fullscreen shader cleanup
     gl.disable(gl.DEPTH_TEST);
     gl.disable(gl.CULL_FACE);
 
-    // ===============================
-    // SHADERS (UNCHANGED)
-    // ===============================
     const vertexShaderSource = `
       attribute vec2 aPosition;
       void main() {
@@ -96,7 +57,7 @@ const Lightning = ({
       uniform float uIntensity;
       uniform float uSize;
 
-      #define OCTAVE_COUNT 10
+      #define OCTAVE_COUNT 8
 
       vec3 hsv2rgb(vec3 c) {
         vec3 rgb = clamp(
@@ -104,13 +65,6 @@ const Lightning = ({
           0.0, 1.0
         );
         return c.z * mix(vec3(1.0), rgb, c.y);
-      }
-
-      float hash11(float p) {
-        p = fract(p * .1031);
-        p *= p + 33.33;
-        p *= p + p;
-        return fract(p);
       }
 
       float hash12(vec2 p) {
@@ -128,12 +82,10 @@ const Lightning = ({
       float noise(vec2 p) {
         vec2 ip = floor(p);
         vec2 fp = fract(p);
-
         float a = hash12(ip);
         float b = hash12(ip + vec2(1.0, 0.0));
         float c = hash12(ip + vec2(0.0, 1.0));
         float d = hash12(ip + vec2(1.0, 1.0));
-
         vec2 t = smoothstep(0.0, 1.0, fp);
         return mix(mix(a, b, t.x), mix(c, d, t.x), t.y);
       }
@@ -141,10 +93,9 @@ const Lightning = ({
       float fbm(vec2 p) {
         float value = 0.0;
         float amplitude = 0.5;
-
         for (int i = 0; i < OCTAVE_COUNT; ++i) {
           value += amplitude * noise(p);
-          p *= rotate2d(0.45);
+          p *= rotate2d(0.5);
           p *= 2.0;
           amplitude *= 0.5;
         }
@@ -157,15 +108,20 @@ const Lightning = ({
         uv.x *= iResolution.x / iResolution.y;
         uv.x += uXOffset;
 
-        uv += 2.0 * fbm(uv * uSize + 0.8 * iTime * uSpeed) - 1.0;
+        // jagged lightning shape
+        uv += 3.0 * (fbm(uv * uSize + iTime * uSpeed) - 0.5);
 
         float dist = abs(uv.x);
-        vec3 baseColor = hsv2rgb(vec3(uHue / 360.0, 0.7, 0.8));
 
-        vec3 col = baseColor * pow(
-          mix(0.0, 0.07, hash11(iTime * uSpeed)) / max(dist, 0.001),
-          1.0
-        ) * uIntensity;
+        // core + forks
+        float core = smoothstep(0.002, 0.0, dist);
+        float forks = smoothstep(0.01, 0.002, dist) * 0.25 * fbm(uv * 10.0 + iTime * 2.0);
+
+        vec3 baseColor = hsv2rgb(vec3(uHue / 360.0, 1.0, 1.0));
+        vec3 col = (core + forks) * baseColor * uIntensity;
+
+        // flicker effect
+        col *= smoothstep(0.0, 1.0, fract(sin(iTime * 37.0) * 43758.5453123));
 
         fragColor = vec4(col, 1.0);
       }
@@ -175,9 +131,9 @@ const Lightning = ({
       }
     `;
 
-    const compileShader = (src, type) => {
+    const compileShader = (source, type) => {
       const shader = gl.createShader(type);
-      gl.shaderSource(shader, src);
+      gl.shaderSource(shader, source);
       gl.compileShader(shader);
       if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
         console.error(gl.getShaderInfoLog(shader));
@@ -187,14 +143,18 @@ const Lightning = ({
       return shader;
     };
 
-    const vs = compileShader(vertexShaderSource, gl.VERTEX_SHADER);
-    const fs = compileShader(fragmentShaderSource, gl.FRAGMENT_SHADER);
-    if (!vs || !fs) return;
+    const vertexShader = compileShader(vertexShaderSource, gl.VERTEX_SHADER);
+    const fragmentShader = compileShader(fragmentShaderSource, gl.FRAGMENT_SHADER);
+    if (!vertexShader || !fragmentShader) return;
 
     const program = gl.createProgram();
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
     gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.error(gl.getProgramInfoLog(program));
+      return;
+    }
     gl.useProgram(program);
 
     const vertices = new Float32Array([
@@ -226,10 +186,9 @@ const Lightning = ({
     let animationId;
 
     const render = () => {
-      checkDPR();
-
       gl.uniform2f(iResolutionLocation, canvas.width, canvas.height);
-      gl.uniform1f(iTimeLocation, (performance.now() - startTime) / 1000);
+      const now = performance.now();
+      gl.uniform1f(iTimeLocation, (now - startTime) / 1000);
       gl.uniform1f(uHueLocation, hue);
       gl.uniform1f(uXOffsetLocation, xOffset);
       gl.uniform1f(uSpeedLocation, speed);
@@ -244,8 +203,6 @@ const Lightning = ({
 
     return () => {
       window.removeEventListener("resize", resizeCanvas);
-      canvas.removeEventListener("webglcontextlost", onContextLost);
-      canvas.removeEventListener("webglcontextrestored", onContextRestored);
       cancelAnimationFrame(animationId);
     };
   }, [hue, xOffset, speed, intensity, size]);

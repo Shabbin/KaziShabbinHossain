@@ -28,9 +28,9 @@ const BlurText = ({
   easing = (t) => t,
   onAnimationComplete,
   stepDuration = 0.35,
+  style = {}, // ✅ NEW: allow passing custom style (color, etc)
 }) => {
-  const elements =
-    animateBy === "words" ? text.split(" ") : text.split("");
+  const elements = animateBy === "words" ? text.split(" ") : text.split("");
   const [inView, setInView] = useState(false);
   const ref = useRef(null);
 
@@ -61,11 +61,7 @@ const BlurText = ({
 
   const defaultTo = useMemo(
     () => [
-      {
-        filter: "blur(5px)",
-        opacity: 0.5,
-        y: direction === "top" ? 5 : -5,
-      },
+      { filter: "blur(5px)", opacity: 0.5, y: direction === "top" ? 5 : -5 },
       { filter: "blur(0px)", opacity: 1, y: 0 },
     ],
     [direction]
@@ -100,13 +96,12 @@ const BlurText = ({
             animate={inView ? animateKeyframes : fromSnapshot}
             transition={spanTransition}
             onAnimationComplete={
-              index === elements.length - 1
-                ? onAnimationComplete
-                : undefined
+              index === elements.length - 1 ? onAnimationComplete : undefined
             }
             style={{
               display: "inline-block",
               willChange: "transform, filter, opacity",
+              ...style, // ✅ apply custom style (like color) here
             }}
           >
             {segment === " " ? "\u00A0" : segment}

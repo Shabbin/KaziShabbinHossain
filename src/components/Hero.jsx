@@ -4,8 +4,9 @@ import Lightning from "./Lightning";
 import BlurText from "./BlurText";
 import { FaGithub, FaFacebookF, FaInstagram } from "react-icons/fa";
 
-const ACCENT_HUE = 142; // matches your green pill + lightning
-const ACCENT_HEX = "#22c55e"; // ~ Tailwind green-500
+// 🌿 Green accent for Lightning and Hi, I'm
+const ACCENT_HUE = 142;       // hue for Lightning
+const ACCENT_HEX = "#16a34a"; // Tailwind green-700
 
 const Hero = ({ isMenuOpen }) => {
   const headingAnimationFrom = {
@@ -42,7 +43,12 @@ const Hero = ({ isMenuOpen }) => {
         className="absolute inset-0 bg-black z-0"
         initial={{ opacity: 0.8 }}
         animate={{ opacity: [0.8, 0.4, 0.8] }}
-        transition={{ duration: 1.1, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }}
+        transition={{
+          duration: 1.1,
+          repeat: Infinity,
+          repeatType: "loop",
+          ease: "easeInOut",
+        }}
       />
 
       {/* Lightning overlay */}
@@ -59,12 +65,10 @@ const Hero = ({ isMenuOpen }) => {
         }}
       />
 
-      {/* GLASS/BLUR OVERLAY WHEN MENU OPEN */}
-      {isMenuOpen && (
-        <div className="absolute inset-0 z-25 bg-white/10 backdrop-blur-md" />
-      )}
+      {/* Glass/blur overlay when menu is open */}
+      {isMenuOpen && <div className="absolute inset-0 z-25 bg-white/10 backdrop-blur-md" />}
 
-      {/* Hero text/content */}
+      {/* Hero content */}
       <div
         className={`relative z-20 top-[120px] max-w-7xl mx-auto ${styles.paddingX} flex flex-col items-center gap-5`}
         style={{
@@ -76,19 +80,28 @@ const Hero = ({ isMenuOpen }) => {
         <motion.div
           className={`${styles.heroHeadText} flex flex-wrap items-baseline gap-2 justify-center`}
           animate={{ y: [0, -6, 0] }}
-          transition={{ duration: 3, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            repeatType: "mirror",
+            ease: "easeInOut",
+          }}
         >
+          {/* "Hi, I'm" in green */}
           <BlurText
             text="Hi, I'm"
             delay={220}
             animateBy="letters"
             direction="top"
-            className="text-white"
+            className="font-bold"
+            style={{ color: ACCENT_HEX }} // <-- green
             animationFrom={headingAnimationFrom}
             animationTo={headingAnimationTo}
             stepDuration={0.5}
             easing="easeOut"
           />
+
+          {/* Your name with glow animation */}
           <motion.span
             animate={{
               color: [ACCENT_HEX, "#f9f5ff", ACCENT_HEX],
@@ -101,7 +114,13 @@ const Hero = ({ isMenuOpen }) => {
               y: [0, -2, 0, 1, 0],
               scale: [1, 1.04, 0.99, 1],
             }}
-            transition={{ duration: 0.5, repeat: Infinity, repeatType: "loop", ease: "easeOut", repeatDelay: 1.8 }}
+            transition={{
+              duration: 0.5,
+              repeat: Infinity,
+              repeatType: "loop",
+              ease: "easeOut",
+              repeatDelay: 1.8,
+            }}
             className="inline-block"
           >
             <BlurText
@@ -110,7 +129,7 @@ const Hero = ({ isMenuOpen }) => {
               animateBy="letters"
               direction="top"
               className="font-bold"
-              style={{ color: ACCENT_HEX }}
+              style={{}} // <-- no green here, keep normal
               animationFrom={headingAnimationFrom}
               animationTo={headingAnimationTo}
               stepDuration={0.5}
@@ -119,17 +138,23 @@ const Hero = ({ isMenuOpen }) => {
           </motion.span>
         </motion.div>
 
-        {/* Subtitle */}
+        {/* Subtitle (now green) */}
         <motion.div
           animate={{ y: [0, -4, 0] }}
-          transition={{ duration: 3.2, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
+          transition={{
+            duration: 3.2,
+            repeat: Infinity,
+            repeatType: "mirror",
+            ease: "easeInOut",
+          }}
         >
           <BlurText
             text="I enjoy solving problems through code, structure, and creative discipline."
             delay={140}
             animateBy="words"
             direction="top"
-            className={`${styles.heroSubText} mt-2 text-white-100 text-center`}
+            className={`${styles.heroSubText} mt-2 text-center`}
+            style={{ color: ACCENT_HEX }} // <-- make subtitle green
             animationFrom={subtitleAnimationFrom}
             animationTo={subtitleAnimationTo}
             stepDuration={0.45}
@@ -137,7 +162,7 @@ const Hero = ({ isMenuOpen }) => {
           />
         </motion.div>
 
-        {/* Social Icons */}
+        {/* Social icons */}
         <div className="mt-6 flex gap-6">
           <a
             href="https://github.com/Shabbin"
