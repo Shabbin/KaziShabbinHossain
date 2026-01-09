@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { styles } from "../styles";
 import Lightning from "./Lightning";
@@ -9,6 +10,9 @@ const ACCENT_HUE = 142;       // hue for Lightning
 const ACCENT_HEX = "#16a34a"; // Tailwind green-700
 
 const Hero = ({ isMenuOpen }) => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+
   const headingAnimationFrom = {
     filter: "blur(20px)",
     opacity: 0,
@@ -33,10 +37,33 @@ const Hero = ({ isMenuOpen }) => {
     { filter: "blur(0px)", opacity: 1, y: 0 },
   ];
 
+  // mouse drag tracking
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    updateMousePos(e);
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging) updateMousePos(e);
+  };
+
+  const handleMouseUp = () => setIsDragging(false);
+
+  const updateMousePos = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const y = ((e.clientY - rect.top) / rect.height) * -2 + 1;
+    setMousePos({ x, y });
+  };
+
   return (
     <section
       className="relative w-full h-screen mx-auto overflow-hidden bg-cover bg-center"
       style={{ backgroundImage: "url('/myself.jpg')" }}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
     >
       {/* Dark flickering overlay */}
       <motion.div
@@ -52,8 +79,16 @@ const Hero = ({ isMenuOpen }) => {
       />
 
       {/* Lightning overlay */}
-      <div className="absolute inset-0 z-10 mix-blend-screen opacity-100 pointer-events-none">
-        <Lightning hue={ACCENT_HUE} xOffset={0} speed={1.1} intensity={1.6} size={1} />
+      <div className="absolute inset-0 z-10 mix-blend-screen pointer-events-none">
+        <Lightning
+          hue={ACCENT_HUE}
+          xOffset={mousePos.x}
+          yOffset={mousePos.y}
+          speed={1.2}
+          intensity={isDragging ? 2.5 : 1.6} // brighter when active
+          size={1}
+          isActive={isDragging}             // triggers ZZZ spark
+        />
       </div>
 
       {/* Bottom fade */}
@@ -94,7 +129,7 @@ const Hero = ({ isMenuOpen }) => {
             animateBy="letters"
             direction="top"
             className="font-bold"
-            style={{ color: ACCENT_HEX }} // <-- green
+            style={{ color: ACCENT_HEX }}
             animationFrom={headingAnimationFrom}
             animationTo={headingAnimationTo}
             stepDuration={0.5}
@@ -129,7 +164,7 @@ const Hero = ({ isMenuOpen }) => {
               animateBy="letters"
               direction="top"
               className="font-bold"
-              style={{}} // <-- no green here, keep normal
+              style={{}}
               animationFrom={headingAnimationFrom}
               animationTo={headingAnimationTo}
               stepDuration={0.5}
@@ -138,7 +173,7 @@ const Hero = ({ isMenuOpen }) => {
           </motion.span>
         </motion.div>
 
-        {/* Subtitle (now green) */}
+        {/* Subtitle */}
         <motion.div
           animate={{ y: [0, -4, 0] }}
           transition={{
@@ -154,7 +189,7 @@ const Hero = ({ isMenuOpen }) => {
             animateBy="words"
             direction="top"
             className={`${styles.heroSubText} mt-2 text-center`}
-            style={{ color: ACCENT_HEX }} // <-- make subtitle green
+            style={{ color: ACCENT_HEX }}
             animationFrom={subtitleAnimationFrom}
             animationTo={subtitleAnimationTo}
             stepDuration={0.45}
@@ -164,45 +199,19 @@ const Hero = ({ isMenuOpen }) => {
 
         {/* Social icons */}
         <div className="mt-6 flex gap-6">
-          <a
-            href="https://github.com/Shabbin"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-4 rounded-full transition-transform transform hover:scale-110"
-            style={{
-              backgroundColor: "rgba(0,0,0,0.5)",
-              color: ACCENT_HEX,
-              boxShadow: `0 0 8px ${ACCENT_HEX}44`,
-            }}
-          >
-            <FaGithub size={28} />
-          </a>
-          <a
-            href="https://www.facebook.com/shabbin.hossain.35/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-4 rounded-full transition-transform transform hover:scale-110"
-            style={{
-              backgroundColor: "rgba(0,0,0,0.5)",
-              color: ACCENT_HEX,
-              boxShadow: `0 0 8px ${ACCENT_HEX}44`,
-            }}
-          >
-            <FaFacebookF size={26} />
-          </a>
-          <a
-            href="https://www.instagram.com/shabbin251/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-4 rounded-full transition-transform transform hover:scale-110"
-            style={{
-              backgroundColor: "rgba(0,0,0,0.5)",
-              color: ACCENT_HEX,
-              boxShadow: `0 0 8px ${ACCENT_HEX}44`,
-            }}
-          >
-            <FaInstagram size={26} />
-          </a>
+          {[{
+            href:"https://github.com/Shabbin", icon:<FaGithub size={28}/>
+          },{
+            href:"https://www.facebook.com/shabbin.hossain.35/", icon:<FaFacebookF size={26}/>
+          },{
+            href:"https://www.instagram.com/shabbin251/", icon:<FaInstagram size={26}/>
+          }].map((item,i)=>(
+            <a key={i} href={item.href} target="_blank" rel="noopener noreferrer"
+               className="p-4 rounded-full transition-transform transform hover:scale-110"
+               style={{backgroundColor:"rgba(0,0,0,0.5)", color:ACCENT_HEX, boxShadow:`0 0 8px ${ACCENT_HEX}44`}}>
+              {item.icon}
+            </a>
+          ))}
         </div>
       </div>
     </section>

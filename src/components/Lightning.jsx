@@ -1,11 +1,13 @@
 import React, { useRef, useEffect } from "react";
 
 const Lightning = ({
-  hue = 142,       // color hue
-  xOffset = 0,     // horizontal offset
-  speed = 1,       // animation speed
-  intensity = 1,   // brightness
-  size = 1,        // scale of noise
+  hue = 142,
+  xOffset = 0,
+  yOffset = 0,
+  speed = 1,
+  intensity = 1,
+  size = 1,
+  isActive = false, // triggers spark effect
 }) => {
   const canvasRef = useRef(null);
 
@@ -14,18 +16,10 @@ const Lightning = ({
     if (!canvas) return;
 
     const gl =
-      canvas.getContext("webgl", {
-        antialias: true,
-        preserveDrawingBuffer: false,
-        powerPreference: "high-performance",
-      }) || canvas.getContext("experimental-webgl");
+      canvas.getContext("webgl", { antialias: true }) ||
+      canvas.getContext("experimental-webgl");
+    if (!gl) return console.error("WebGL not supported");
 
-    if (!gl) {
-      console.error("WebGL not supported");
-      return;
-    }
-
-    // DPI-aware resize
     const resizeCanvas = () => {
       const rect = canvas.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
@@ -53,9 +47,11 @@ const Lightning = ({
       uniform float iTime;
       uniform float uHue;
       uniform float uXOffset;
+      uniform float uYOffset;
       uniform float uSpeed;
       uniform float uIntensity;
       uniform float uSize;
+      uniform float uActive;
 
       #define OCTAVE_COUNT 8
 
@@ -107,23 +103,28 @@ const Lightning = ({
         uv = 2.0 * uv - 1.0;
         uv.x *= iResolution.x / iResolution.y;
         uv.x += uXOffset;
+        uv.y += uYOffset;
 
         // jagged lightning shape
         uv += 3.0 * (fbm(uv * uSize + iTime * uSpeed) - 0.5);
 
         float dist = abs(uv.x);
 
-        // core + forks
-        float core = smoothstep(0.002, 0.0, dist);
-        float forks = smoothstep(0.01, 0.002, dist) * 0.25 * fbm(uv * 10.0 + iTime * 2.0);
+        // core thickness increases when active
+        float core = smoothstep(0.002, 0.0, dist) * (0.5 + uActive*1.5);
 
-        vec3 baseColor = hsv2rgb(vec3(uHue / 360.0, 1.0, 1.0));
+        // forks multiply when active
+        float forks = smoothstep(0.01, 0.002, dist) * 0.25 * fbm(uv*10.0+iTime*2.0) * (1.0 + uActive*1.5);
+
+        vec3 baseColor = hsv2rgb(vec3(uHue/360.0,1.0,1.0));
         vec3 col = (core + forks) * baseColor * uIntensity;
 
         // flicker effect
-        col *= smoothstep(0.0, 1.0, fract(sin(iTime * 37.0) * 43758.5453123));
+        col *= uActive > 0.5 
+                 ? 0.3 + 0.7*fract(sin(iTime*120.0 + uv.x*50.0)*43758.5453) 
+                 : smoothstep(0.0,1.0,fract(sin(iTime*37.0)*43758.5453));
 
-        fragColor = vec4(col, 1.0);
+        fragColor = vec4(col,1.0);
       }
 
       void main() {
@@ -158,54 +159,53 @@ const Lightning = ({
     gl.useProgram(program);
 
     const vertices = new Float32Array([
-      -1, -1,
-       1, -1,
-      -1,  1,
-      -1,  1,
-       1, -1,
-       1,  1,
+      -1,-1, 1,-1, -1,1,
+      -1,1, 1,-1, 1,1
     ]);
-
     const buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 
-    const aPosition = gl.getAttribLocation(program, "aPosition");
+    const aPosition = gl.getAttribLocation(program,"aPosition");
     gl.enableVertexAttribArray(aPosition);
-    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(aPosition,2,gl.FLOAT,false,0,0);
 
-    const iResolutionLocation = gl.getUniformLocation(program, "iResolution");
-    const iTimeLocation = gl.getUniformLocation(program, "iTime");
-    const uHueLocation = gl.getUniformLocation(program, "uHue");
-    const uXOffsetLocation = gl.getUniformLocation(program, "uXOffset");
-    const uSpeedLocation = gl.getUniformLocation(program, "uSpeed");
-    const uIntensityLocation = gl.getUniformLocation(program, "uIntensity");
-    const uSizeLocation = gl.getUniformLocation(program, "uSize");
+    // Uniforms
+    const iResolutionLoc = gl.getUniformLocation(program,"iResolution");
+    const iTimeLoc = gl.getUniformLocation(program,"iTime");
+    const uHueLoc = gl.getUniformLocation(program,"uHue");
+    const uXOffsetLoc = gl.getUniformLocation(program,"uXOffset");
+    const uYOffsetLoc = gl.getUniformLocation(program,"uYOffset");
+    const uSpeedLoc = gl.getUniformLocation(program,"uSpeed");
+    const uIntensityLoc = gl.getUniformLocation(program,"uIntensity");
+    const uSizeLoc = gl.getUniformLocation(program,"uSize");
+    const uActiveLoc = gl.getUniformLocation(program,"uActive");
 
     const startTime = performance.now();
     let animationId;
 
     const render = () => {
-      gl.uniform2f(iResolutionLocation, canvas.width, canvas.height);
       const now = performance.now();
-      gl.uniform1f(iTimeLocation, (now - startTime) / 1000);
-      gl.uniform1f(uHueLocation, hue);
-      gl.uniform1f(uXOffsetLocation, xOffset);
-      gl.uniform1f(uSpeedLocation, speed);
-      gl.uniform1f(uIntensityLocation, intensity);
-      gl.uniform1f(uSizeLocation, size);
+      gl.uniform2f(iResolutionLoc,canvas.width,canvas.height);
+      gl.uniform1f(iTimeLoc,(now-startTime)/1000);
+      gl.uniform1f(uHueLoc,hue);
+      gl.uniform1f(uXOffsetLoc,xOffset);
+      gl.uniform1f(uYOffsetLoc,yOffset);
+      gl.uniform1f(uSpeedLoc,speed);
+      gl.uniform1f(uIntensityLoc,intensity);
+      gl.uniform1f(uSizeLoc,size);
+      gl.uniform1f(uActiveLoc,isActive?1:0);
 
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
+      gl.drawArrays(gl.TRIANGLES,0,6);
       animationId = requestAnimationFrame(render);
     };
-
     animationId = requestAnimationFrame(render);
 
     return () => {
       window.removeEventListener("resize", resizeCanvas);
       cancelAnimationFrame(animationId);
     };
-  }, [hue, xOffset, speed, intensity, size]);
+  }, [hue,xOffset,yOffset,speed,intensity,size,isActive]);
 
   return <canvas ref={canvasRef} className="w-full h-full block" />;
 };

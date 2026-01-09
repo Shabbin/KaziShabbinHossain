@@ -1,18 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 
+// 🌿 Green accent
+const ACCENT_HEX = "#16a34a";
+
 // ============================
 // EASY BORDER COLOR SETUP HERE
 // ============================
 const BUTTON_BORDER_COLORS = {
-   // Blue
-  About: "#16a34a",     // Dark green
-  Work: "#4ade80",      // Light green
-  Contact: "#12b886",   // Sap green
+  About: "#16a34a",    // Dark green
+  Work: "#4ade80",     // Light green
+  Contact: "#12b886",  // Sap green
 };
 
 const DEFAULT_ITEMS = [
-
   { label: "About", href: "#about" },
   { label: "Work", href: "#work" },
   { label: "Contact", href: "#contact" },
@@ -24,7 +25,7 @@ export default function BubbleMenu({
   className,
   style,
   menuAriaLabel = "Toggle menu",
-  menuContentColor = "#e5e7eb",
+  menuContentColor = ACCENT_HEX, // <- default green
   useFixedPosition = true,
   animationEase = "back.out(1.7)",
   animationDuration = 0.65,
@@ -50,13 +51,11 @@ export default function BubbleMenu({
     className,
   ].filter(Boolean).join(" ");
 
-  // Toggle menu and notify parent (Hero) about menu state
+  // Toggle menu and notify parent (Hero)
   const handleToggle = () => {
     const nextState = !isMenuOpen;
     setIsMenuOpen(nextState);
     scrollWarnedRef.current = false;
-
-    // ⚡ Notify parent Hero to blur/block
     onMenuClick?.(nextState);
   };
 
@@ -168,7 +167,7 @@ export default function BubbleMenu({
             style={{
               width: 22,
               height: 2,
-              background: menuContentColor,
+              background: ACCENT_HEX, // green lines
               transform: isMenuOpen ? "translateY(4px) rotate(45deg)" : "none",
               transition: "transform 0.25s ease",
             }}
@@ -178,7 +177,7 @@ export default function BubbleMenu({
               marginTop: 5,
               width: 22,
               height: 2,
-              background: menuContentColor,
+              background: ACCENT_HEX, // green lines
               transform: isMenuOpen ? "translateY(-4px) rotate(-45deg)" : "none",
               transition: "transform 0.25s ease",
             }}
@@ -206,8 +205,8 @@ export default function BubbleMenu({
                 ref={(el) => (bubblesRef.current[idx] = el)}
                 className="absolute rounded-full px-6 min-h-[56px] flex items-center justify-center bg-slate-900/70 border text-sm md:text-base cursor-pointer pointer-events-auto z-[1100]"
                 style={{
-                  borderColor: BUTTON_BORDER_COLORS[item.label],
-                  color: menuContentColor,
+                  borderColor: BUTTON_BORDER_COLORS[item.label] || ACCENT_HEX, // green border fallback
+                  color: ACCENT_HEX, // green text
                 }}
                 onClick={() => {
                   setIsMenuOpen(false);

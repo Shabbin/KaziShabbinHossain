@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { styles } from "../styles";
 import { navLinks } from "../constants";
-import bubbleMenu from "./bubbleMenu";
+import BubbleMenu from "./bubbleMenu"; // <-- Capitalize
+
+// 🌿 Green accent
+const ACCENT_HEX = "#16a34a";
 
 const Navbar = () => {
   const [showMenu, setShowMenu] = useState(true);
@@ -26,7 +29,7 @@ const Navbar = () => {
 
   const items = navLinks.map((nav, index) => {
     const colors = [
-      { bgColor: "#38bdf8", textColor: "#ffffff" },
+      { bgColor: ACCENT_HEX, textColor: "#ffffff" }, // use green
       { bgColor: "#22c55e", textColor: "#ffffff" },
       { bgColor: "#f59e0b", textColor: "#111827" },
       { bgColor: "#8b5cf6", textColor: "#f9fafb" },
@@ -47,11 +50,11 @@ const Navbar = () => {
       <div className="w-full flex justify-end max-w-7xl mx-auto">
         {showMenu && (
           <div className="pointer-events-auto">
-            <bubbleMenu
+            <BubbleMenu
               key={menuKey}
               items={items}
               menuAriaLabel="Toggle navigation"
-              menuContentColor="#e5e7eb"
+              menuContentColor={ACCENT_HEX} // <-- green here
               useFixedPosition={true}
             />
           </div>
