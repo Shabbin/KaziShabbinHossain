@@ -1,13 +1,26 @@
-<div style="display: flex; align-items: center; gap: 10px;">
-  <!-- SVG Logo -->
-  <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 100 100">
-    <polygon points="50,2 95,25 95,75 50,98 5,75 5,25"
-             fill="black" stroke="green" stroke-width="4"/>
-    <text x="50%" y="50%" font-family="Arial, sans-serif" font-weight="bold" font-size="70" fill="green" text-anchor="middle" dominant-baseline="central">K</text>
-  </svg>
-
-  <!-- Name -->
-  <span style="font-family: Arial, sans-serif; font-size: 36px; font-weight: bold; color: green;">
-    YourName
-  </span>
-</div>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="64"
+  height="64"
+  viewBox="0 0 100 100"
+>
+  <polygon
+    points="50,2 95,25 95,75 50,98 5,75 5,25"
+    fill="black"
+    stroke="green"
+    stroke-width="4"
+  />
+  <text
+    x="50%"
+    y="52%"
+    font-family="Arial, sans-serif"
+    font-weight="bold"
+    font-size="60"
+    fill="green"
+    text-anchor="middle"
+    dominant-baseline="middle"
+  >
+    K
+  </text>
+</svg>
