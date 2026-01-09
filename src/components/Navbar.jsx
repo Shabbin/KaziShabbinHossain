@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { styles } from "../styles";
 import { navLinks } from "../constants";
-import BubbleMenu from "./bubbleMenu";
+import bubbleMenu from "./bubbleMenu";
 
 const Navbar = () => {
   const [showMenu, setShowMenu] = useState(true);
@@ -47,7 +47,7 @@ const Navbar = () => {
       <div className="w-full flex justify-end max-w-7xl mx-auto">
         {showMenu && (
           <div className="pointer-events-auto">
-            <BubbleMenu
+            <bubbleMenu
               key={menuKey}
               items={items}
               menuAriaLabel="Toggle navigation"

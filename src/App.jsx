@@ -3,7 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import './styles/global.css'; // ← import your global CSS here
 
 import { About, Contact, Experience, Feedbacks, Hero, Navbar, Tech, Works, StarsCanvas } from "./components";
-import BubbleMenu from "./components/BubbleMenu"; // ← make sure path is correct
+import BubbleMenu from "./components/bubbleMenu"; // ← make sure path is correct
 
 const App = () => {
   const [menuOpen, setMenuOpen] = useState(false);
