@@ -6,48 +6,58 @@ import BlurText from "./BlurText";
 import { FaGithub, FaFacebookF, FaInstagram } from "react-icons/fa";
 
 // 🌿 Green accent for Lightning and Hi, I'm
-const ACCENT_HUE = 142;       // hue for Lightning
-const ACCENT_HEX = "#16a34a"; // Tailwind green-700
+const ACCENT_HUE = 142;
+const ACCENT_HEX = "#16a34a";
 
 const Hero = ({ isMenuOpen }) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
 
+  // Detect mobile
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mobile = window.matchMedia("(max-width: 768px)").matches;
+    setIsMobile(mobile);
+  }, []);
+
   const headingAnimationFrom = {
-    filter: "blur(20px)",
+    filter: isMobile ? "blur(8px)" : "blur(20px)",
     opacity: 0,
-    y: -50,
+    y: isMobile ? -20 : -50,
   };
 
   const headingAnimationTo = [
-    { filter: "blur(10px)", opacity: 0.4, y: 10 },
-    { filter: "blur(4px)", opacity: 0.7, y: 3 },
+    { filter: isMobile ? "blur(4px)" : "blur(10px)", opacity: 0.4, y: isMobile ? 5 : 10 },
+    { filter: isMobile ? "blur(2px)" : "blur(4px)", opacity: 0.7, y: isMobile ? 2 : 3 },
     { filter: "blur(0px)", opacity: 1, y: 0 },
   ];
 
   const subtitleAnimationFrom = {
-    filter: "blur(16px)",
+    filter: isMobile ? "blur(6px)" : "blur(16px)",
     opacity: 0,
-    y: -40,
+    y: isMobile ? -12 : -40,
   };
 
   const subtitleAnimationTo = [
-    { filter: "blur(8px)", opacity: 0.5, y: 8 },
-    { filter: "blur(3px)", opacity: 0.8, y: 2 },
+    { filter: isMobile ? "blur(3px)" : "blur(8px)", opacity: 0.5, y: isMobile ? 3 : 8 },
+    { filter: isMobile ? "blur(1px)" : "blur(3px)", opacity: 0.8, y: isMobile ? 1 : 2 },
     { filter: "blur(0px)", opacity: 1, y: 0 },
   ];
 
-  // mouse drag tracking
   const handleMouseDown = (e) => {
-    setIsDragging(true);
-    updateMousePos(e);
+    if (!isMobile) {
+      setIsDragging(true);
+      updateMousePos(e);
+    }
   };
 
   const handleMouseMove = (e) => {
-    if (isDragging) updateMousePos(e);
+    if (!isMobile && isDragging) updateMousePos(e);
   };
 
-  const handleMouseUp = () => setIsDragging(false);
+  const handleMouseUp = () => {
+    if (!isMobile) setIsDragging(false);
+  };
 
   const updateMousePos = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -71,7 +81,7 @@ const Hero = ({ isMenuOpen }) => {
         initial={{ opacity: 0.8 }}
         animate={{ opacity: [0.8, 0.4, 0.8] }}
         transition={{
-          duration: 1.1,
+          duration: isMobile ? 2 : 1.1,
           repeat: Infinity,
           repeatType: "loop",
           ease: "easeInOut",
@@ -84,10 +94,10 @@ const Hero = ({ isMenuOpen }) => {
           hue={ACCENT_HUE}
           xOffset={mousePos.x}
           yOffset={mousePos.y}
-          speed={1.2}
-          intensity={isDragging ? 2.5 : 1.6} // brighter when active
-          size={1}
-          isActive={isDragging}             // triggers ZZZ spark
+          speed={isMobile ? 0.6 : 1.2}
+          intensity={isDragging ? 2.5 : 1.6}
+          size={isMobile ? 0.7 : 1}
+          isActive={isDragging}
         />
       </div>
 
@@ -116,23 +126,22 @@ const Hero = ({ isMenuOpen }) => {
           className={`${styles.heroHeadText} flex flex-wrap items-baseline gap-2 justify-center`}
           animate={{ y: [0, -6, 0] }}
           transition={{
-            duration: 3,
+            duration: isMobile ? 2.5 : 3,
             repeat: Infinity,
             repeatType: "mirror",
             ease: "easeInOut",
           }}
         >
-          {/* "Hi, I'm" in green */}
           <BlurText
             text="Hi, I'm"
-            delay={220}
+            delay={isMobile ? 100 : 220}
             animateBy="letters"
             direction="top"
             className="font-bold"
             style={{ color: ACCENT_HEX }}
             animationFrom={headingAnimationFrom}
             animationTo={headingAnimationTo}
-            stepDuration={0.5}
+            stepDuration={isMobile ? 0.25 : 0.5}
             easing="easeOut"
           />
 
@@ -160,14 +169,14 @@ const Hero = ({ isMenuOpen }) => {
           >
             <BlurText
               text="Shabbin"
-              delay={260}
+              delay={isMobile ? 120 : 260}
               animateBy="letters"
               direction="top"
               className="font-bold"
               style={{}}
               animationFrom={headingAnimationFrom}
               animationTo={headingAnimationTo}
-              stepDuration={0.5}
+              stepDuration={isMobile ? 0.25 : 0.5}
               easing="easeOut"
             />
           </motion.span>
@@ -177,7 +186,7 @@ const Hero = ({ isMenuOpen }) => {
         <motion.div
           animate={{ y: [0, -4, 0] }}
           transition={{
-            duration: 3.2,
+            duration: isMobile ? 2.7 : 3.2,
             repeat: Infinity,
             repeatType: "mirror",
             ease: "easeInOut",
@@ -185,30 +194,37 @@ const Hero = ({ isMenuOpen }) => {
         >
           <BlurText
             text="I enjoy solving problems through code, structure, and creative discipline."
-            delay={140}
+            delay={isMobile ? 80 : 140}
             animateBy="words"
             direction="top"
             className={`${styles.heroSubText} mt-2 text-center`}
             style={{ color: ACCENT_HEX }}
             animationFrom={subtitleAnimationFrom}
             animationTo={subtitleAnimationTo}
-            stepDuration={0.45}
+            stepDuration={isMobile ? 0.25 : 0.45}
             easing="easeOut"
           />
         </motion.div>
 
         {/* Social icons */}
         <div className="mt-6 flex gap-6">
-          {[{
-            href:"https://github.com/Shabbin", icon:<FaGithub size={28}/>
-          },{
-            href:"https://www.facebook.com/shabbin.hossain.35/", icon:<FaFacebookF size={26}/>
-          },{
-            href:"https://www.instagram.com/shabbin251/", icon:<FaInstagram size={26}/>
-          }].map((item,i)=>(
-            <a key={i} href={item.href} target="_blank" rel="noopener noreferrer"
-               className="p-4 rounded-full transition-transform transform hover:scale-110"
-               style={{backgroundColor:"rgba(0,0,0,0.5)", color:ACCENT_HEX, boxShadow:`0 0 8px ${ACCENT_HEX}44`}}>
+          {[
+            { href: "https://github.com/Shabbin", icon: <FaGithub size={isMobile ? 20 : 28} /> },
+            { href: "https://www.facebook.com/shabbin.hossain.35/", icon: <FaFacebookF size={isMobile ? 18 : 26} /> },
+            { href: "https://www.instagram.com/shabbin251/", icon: <FaInstagram size={isMobile ? 18 : 26} /> },
+          ].map((item, i) => (
+            <a
+              key={i}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-4 rounded-full transition-transform transform hover:scale-110"
+              style={{
+                backgroundColor: "rgba(0,0,0,0.5)",
+                color: ACCENT_HEX,
+                boxShadow: `0 0 8px ${ACCENT_HEX}44`,
+              }}
+            >
               {item.icon}
             </a>
           ))}
