@@ -44,7 +44,11 @@ export default function BubbleMenu({
   const containerClassName = [
     "bubble-menu",
     useFixedPosition ? "fixed" : "relative",
-    "left-0 right-0",
+
+    // 🔽 UPDATED POSITIONING (ONLY CHANGE)
+    "top-6 right-6",           // moved down + left slightly
+    "md:top-8 md:right-8",     // consistent desktop placement
+
     "flex items-center justify-end",
     "pointer-events-none",
     "z-[1001]",
@@ -98,13 +102,12 @@ export default function BubbleMenu({
     bubbles.forEach((bubble, i) => {
       gsap.set(bubble, { x: 0, y: 0, scale: 0.3, opacity: 0 });
 
-      // Mobile: center triangle layout
       if (isMobile) {
-        const triangleSpacing = 80; // distance between buttons
+        const triangleSpacing = 80;
         let x = 0,
           y = 0;
+
         if (count === 3) {
-          // triangle layout
           if (i === 0) {
             x = 0;
             y = -triangleSpacing;
@@ -116,7 +119,6 @@ export default function BubbleMenu({
             y = triangleSpacing * 0.5;
           }
         } else {
-          // fallback: spread horizontally
           x = (i - (count - 1) / 2) * triangleSpacing;
           y = 0;
         }
@@ -131,7 +133,6 @@ export default function BubbleMenu({
           ease: animationEase,
         });
       } else {
-        // Desktop: original floating/orbit logic
         const radiusBase = Math.min(window.innerWidth, window.innerHeight) * 0.2;
         const angleSpread = Math.PI * 0.9;
         const startAngle = -angleSpread / 2;
@@ -140,7 +141,9 @@ export default function BubbleMenu({
         const radius = radiusBase * (0.95 + i * 0.02);
         const x = Math.cos(angle) * radius;
         const y = Math.sin(angle) * radius;
-        const delay = i * staggerDelay + gsap.utils.random(-staggerDelay * 0.25, staggerDelay * 0.25);
+        const delay =
+          i * staggerDelay +
+          gsap.utils.random(-staggerDelay * 0.25, staggerDelay * 0.25);
 
         gsap.to(bubble, {
           x,
@@ -166,7 +169,6 @@ export default function BubbleMenu({
     });
   };
 
-  // Animate orbit buttons close
   const animateOrbitClose = () => {
     const bubbles = bubblesRef.current.filter(Boolean);
     floatTweensRef.current.forEach((t) => t?.kill());
@@ -198,14 +200,48 @@ export default function BubbleMenu({
           onClick={handleToggle}
           aria-label={menuAriaLabel}
           aria-pressed={isMenuOpen}
-          className="inline-flex flex-col items-center justify-center pointer-events-auto w-11 h-11 md:w-12 md:h-12 cursor-pointer bg-transparent"
+          className="
+            relative
+            inline-flex
+            flex-col
+            items-center
+            justify-center
+            pointer-events-auto
+            w-11 h-11 md:w-12 md:h-12
+            rounded-full
+            backdrop-blur-md
+            bg-white/5
+            border
+            transition-all
+            duration-300
+            active:scale-95
+          "
+          style={{
+            borderColor: "rgba(22,163,74,0.45)",
+            boxShadow: `
+              0 0 12px rgba(22,163,74,0.55),
+              inset 0 0 10px rgba(22,163,74,0.18)
+            `,
+          }}
         >
+          <span
+            className="absolute inset-0 rounded-full pointer-events-none"
+            style={{
+              boxShadow: isMenuOpen
+                ? `0 0 18px ${ACCENT_HEX}`
+                : `0 0 10px rgba(22,163,74,0.35)`,
+            }}
+          />
+
           <span
             style={{
               width: 22,
               height: 2,
               background: ACCENT_HEX,
-              transform: isMenuOpen ? "translateY(4px) rotate(45deg)" : "none",
+              boxShadow: `0 0 6px ${ACCENT_HEX}`,
+              transform: isMenuOpen
+                ? "translateY(4px) rotate(45deg)"
+                : "none",
               transition: "transform 0.25s ease",
             }}
           />
@@ -215,7 +251,10 @@ export default function BubbleMenu({
               width: 22,
               height: 2,
               background: ACCENT_HEX,
-              transform: isMenuOpen ? "translateY(-4px) rotate(-45deg)" : "none",
+              boxShadow: `0 0 6px ${ACCENT_HEX}`,
+              transform: isMenuOpen
+                ? "translateY(-4px) rotate(-45deg)"
+                : "none",
               transition: "transform 0.25s ease",
             }}
           />
@@ -228,10 +267,8 @@ export default function BubbleMenu({
           ref={overlayRef}
           className="fixed inset-0 z-[1000] flex justify-center items-center pointer-events-auto"
         >
-          {/* GLASS/BLUR BACKGROUND */}
           <div className="fixed inset-0 bg-white/10 backdrop-blur-md z-[1000]" />
 
-          {/* ORBIT BUTTONS */}
           <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
             {menuItems.map((item, idx) => (
               <button
@@ -239,13 +276,16 @@ export default function BubbleMenu({
                 ref={(el) => (bubblesRef.current[idx] = el)}
                 className="absolute rounded-full px-6 min-h-[56px] flex items-center justify-center bg-slate-900/70 border text-sm md:text-base cursor-pointer pointer-events-auto z-[1100]"
                 style={{
-                  borderColor: BUTTON_BORDER_COLORS[item.label] || ACCENT_HEX,
+                  borderColor:
+                    BUTTON_BORDER_COLORS[item.label] || ACCENT_HEX,
                   color: ACCENT_HEX,
                 }}
                 onClick={() => {
                   setIsMenuOpen(false);
                   onMenuClick?.(false);
-                  document.querySelector(item.href)?.scrollIntoView({ behavior: "smooth" });
+                  document
+                    .querySelector(item.href)
+                    ?.scrollIntoView({ behavior: "smooth" });
                 }}
               >
                 {item.label}
@@ -253,11 +293,8 @@ export default function BubbleMenu({
             ))}
           </div>
 
-          {/* SCROLL WARNING */}
           {showScrollWarning && (
-            <div
-              className="fixed bottom-60 left-1/2 transform -translate-x-1/2 bg-black p-4 rounded shadow-lg z-[1200]"
-            >
+            <div className="fixed bottom-60 left-1/2 transform -translate-x-1/2 bg-black p-4 rounded shadow-lg z-[1200]">
               <p
                 className="text-green-400 text-center cursor-pointer"
                 onClick={() => setShowScrollWarning(false)}
