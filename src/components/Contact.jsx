@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import emailjs from "@emailjs/browser";
 
 import { styles } from "../styles";
-import NetworkGlobe from "./networkGlobe";
 import { SectionWrapper } from "../hoc";
 import ElectricBorder from "./ElectricBorder";
 import { useIsMobile } from "../utils/useInMobile"; // detect mobile
@@ -96,7 +95,7 @@ const Contact = () => {
             value={form.name}
             onChange={handleChange}
             placeholder="What's your good name?"
-            className="bg-[#020617] py-4 px-5 rounded-lg text-white placeholder:text-slate-500 border border-slate-700/60 focus:border-[rgba(34,197,94,0.8)]"
+            className="bg-[#020617] py-5 px-5 sm:py-4 rounded-lg text-white placeholder:text-slate-400 placeholder-opacity-100 text-xs sm:text-sm border border-slate-700/60 focus:border-[rgba(34,197,94,0.8)]"
           />
         </label>
 
@@ -108,7 +107,7 @@ const Contact = () => {
             value={form.email}
             onChange={handleChange}
             placeholder="What's your email address?"
-            className="bg-[#020617] py-4 px-5 rounded-lg text-white placeholder:text-slate-500 border border-slate-700/60 focus:border-[rgba(34,197,94,0.8)]"
+            className="bg-[#020617] py-5 px-5 sm:py-4 rounded-lg text-white placeholder:text-slate-400 placeholder-opacity-100 text-xs sm:text-sm border border-slate-700/60 focus:border-[rgba(34,197,94,0.8)]"
           />
         </label>
 
@@ -120,7 +119,7 @@ const Contact = () => {
             value={form.message}
             onChange={handleChange}
             placeholder="What would you like to talk about?"
-            className="bg-[#020617] py-4 px-5 rounded-lg text-white placeholder:text-slate-500 border border-slate-700/60 focus:border-[rgba(34,197,94,0.8)] resize-none"
+            className="bg-[#020617] py-5 px-5 sm:py-4 rounded-lg text-white placeholder:text-slate-400 placeholder-opacity-100 text-xs sm:text-sm border border-slate-700/60 focus:border-[rgba(34,197,94,0.8)] resize-none"
           />
         </label>
 
@@ -170,22 +169,7 @@ const Contact = () => {
           )}
         </motion.div>
 
-        {/* RIGHT — Network Globe */}
-        {/* <motion.div variants={planetVariants} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.4 }} className="xl:flex-1 flex items-center justify-center">
-          {isMobile ? (
-            <div className="aspect-square w-[260px] sm:w-[320px] md:w-[380px] lg:w-[420px] flex items-center justify-center relative">
-              <div className="pointer-events-none absolute inset-0 -z-10" style={{ background: "radial-gradient(circle, rgba(0, 0, 0, 0.32), transparent 60%)", filter: "blur(8px)" }} />
-              <NetworkGlobe rotationEnabled={false} />
-            </div>
-          ) : (
-            <ElectricBorder color={ACCENT_HEX} speed={0.9} chaos={0.6} thickness={2} style={{ borderRadius: 24, width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <div className="aspect-square w-[260px] sm:w-[320px] md:w-[380px] lg:w-[420px] flex items-center justify-center relative">
-                <div className="pointer-events-none absolute inset-0 -z-10" style={{ background: "radial-gradient(circle, rgba(0, 0, 0, 0.32), transparent 60%)", filter: "blur(8px)" }} />
-                <NetworkGlobe rotationEnabled={true} />
-              </div>
-            </ElectricBorder>
-          )}
-        </motion.div> */}
+        {/* RIGHT — Network Globe removed */}
       </div>
     </div>
   );
