@@ -1,4 +1,3 @@
-
 import Tilt from "react-parallax-tilt";
 import { motion } from "framer-motion";
 
@@ -9,6 +8,10 @@ import { projects } from "../constants";
 import { fadeIn, textVariant } from "../utils/motion";
 
 const ACCENT_HEX = "#22c55e";
+
+// ✅ simple mobile detector
+const isMobile =
+  typeof window !== "undefined" && window.innerWidth < 640;
 
 const ProjectCard = ({
   index,
@@ -26,13 +29,13 @@ const ProjectCard = ({
           scale: 1,
           speed: 450,
         }}
-        className="
+        className={`
           relative
           rounded-2xl
           bg-gradient-to-br from-[#020617] via-[#020617] to-[#020617]
           border border-[rgba(34,197,94,0.7)]
-          sm:w-[360px] w-full
-        "
+          ${isMobile ? "w-[280px]" : "sm:w-[360px] w-full"}
+        `}
         style={{
           boxShadow: `
             0 0 24px rgba(0,0,0,0.9),
@@ -41,7 +44,15 @@ const ProjectCard = ({
         }}
       >
         <div className="p-5 rounded-2xl">
-          <div className="relative w-full h-[230px] overflow-hidden rounded-xl">
+          <div
+            className={`
+              relative
+              w-full
+              ${isMobile ? "h-[180px]" : "h-[230px]"}
+              overflow-hidden
+              rounded-xl
+            `}
+          >
             <img
               src={image}
               alt={`${name} preview`}
@@ -91,7 +102,6 @@ const ProjectCard = ({
 
 const Works = () => {
   return (
-    // 👇 negative margin so this panel overlaps About's bottom glow
     <div className="relative mt-[-32px] sm:mt-[-40px]">
       {/* Green border glow behind everything */}
       <div
@@ -112,21 +122,22 @@ const Works = () => {
         }}
       />
 
-      {/* Inner content */}
       <div className="rounded-[32px] px-6 py-10 sm:px-10 sm:py-12 bg-transparent">
-        <motion.div variants={textVariant(0.1)}>
-          <p
-            className={styles.sectionSubText}
-            style={{ color: ACCENT_HEX }}
-          >
+        {/* ✅ Center headings on mobile, left on desktop */}
+        <motion.div
+          variants={textVariant(0.1)}
+          className="flex flex-col items-center sm:items-start text-center sm:text-left"
+        >
+          <p className={styles.sectionSubText} style={{ color: ACCENT_HEX }}>
             My work
           </p>
           <h2 className={styles.sectionHeadText}>
             <span className="relative inline-block">
               Projects
               <span style={{ color: ACCENT_HEX }}>.</span>
+              {/* ✅ Center underline only on mobile, left on desktop */}
               <span
-                className="absolute left-0 -bottom-2 h-[2px] w-10 rounded-full"
+                className="absolute left-1/2 sm:left-0 -bottom-2 h-[2px] w-10 rounded-full -translate-x-1/2 sm:translate-x-0"
                 style={{
                   background: `linear-gradient(to right, ${ACCENT_HEX}, transparent)`,
                   boxShadow: `0 0 12px ${ACCENT_HEX}`,
@@ -136,10 +147,10 @@ const Works = () => {
           </h2>
         </motion.div>
 
-        <div className="w-full flex">
+        <div className="w-full flex justify-center sm:justify-start">
           <motion.p
             variants={fadeIn("", "tween", 0.2, 1)}
-            className="mt-3 text-secondary text-[17px] max-w-3xl leading-[30px]"
+            className="mt-3 text-secondary text-[17px] leading-[30px] text-center sm:text-left w-full sm:max-w-full"
           >
             Following projects showcase my skills and experience through
             real-world examples of my work. Each project is briefly described
@@ -149,7 +160,7 @@ const Works = () => {
           </motion.p>
         </div>
 
-        <div className="mt-12 sm:mt-16 flex flex-wrap gap-7">
+        <div className="mt-12 sm:mt-16 flex flex-wrap justify-center sm:justify-start gap-7">
           {projects.map((project, index) => (
             <ProjectCard
               key={`project-${index}`}

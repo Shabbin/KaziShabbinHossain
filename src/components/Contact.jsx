@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import emailjs from "@emailjs/browser";
 
 import { styles } from "../styles";
+import NetworkGlobe from "./networkGlobe";
 import { SectionWrapper } from "../hoc";
 import ElectricBorder from "./ElectricBorder";
 import { useIsMobile } from "../utils/useInMobile"; // detect mobile
@@ -74,52 +75,74 @@ const Contact = () => {
   // Form content (reusable for mobile & desktop)
   const FormContent = () => (
     <>
-      <p className={styles.sectionSubText} style={{ color: ACCENT_HEX }}>Get in touch</p>
-      <h3 className={styles.sectionHeadText}>
+      <p
+        className={`${styles.sectionSubText} ${isMobile ? "text-center" : ""}`}
+        style={{ color: ACCENT_HEX }}
+      >
+        Get in touch
+      </p>
+      <h3
+        className={`${styles.sectionHeadText} ${isMobile ? "text-center" : ""}`}
+      >
         <span className="relative inline-block">
           Contact
           <span style={{ color: ACCENT_HEX }}>.</span>
           <span
             className="absolute left-0 -bottom-2 h-[2px] w-10 rounded-full"
-            style={{ background: `linear-gradient(to right, ${ACCENT_HEX}, transparent)`, boxShadow: `0 0 12px ${ACCENT_HEX}` }}
+            style={{
+              background: `linear-gradient(to right, ${ACCENT_HEX}, transparent)`,
+              boxShadow: `0 0 12px ${ACCENT_HEX}`,
+            }}
           />
         </span>
       </h3>
 
       <form ref={formRef} onSubmit={handleSubmit} className="mt-10 flex flex-col gap-7">
         <label className="flex flex-col">
-          <span className="text-white font-medium mb-2">Your Name</span>
+          <span
+            className={`text-white font-medium mb-2 ${isMobile ? "text-center" : ""}`}
+          >
+            Your Name
+          </span>
           <input
             type="text"
             name="name"
             value={form.name}
             onChange={handleChange}
             placeholder="What's your good name?"
-            className="bg-[#020617] py-5 px-5 sm:py-4 rounded-lg text-white placeholder:text-slate-400 placeholder-opacity-100 text-xs sm:text-sm border border-slate-700/60 focus:border-[rgba(34,197,94,0.8)]"
+            className="bg-[#020617] py-4 px-5 rounded-lg text-white placeholder:text-slate-500 text-[13px] border border-slate-700/60 focus:border-[rgba(34,197,94,0.8)]"
           />
         </label>
 
         <label className="flex flex-col">
-          <span className="text-white font-medium mb-2">Your Email</span>
+          <span
+            className={`text-white font-medium mb-2 ${isMobile ? "text-center" : ""}`}
+          >
+            Your Email
+          </span>
           <input
             type="email"
             name="email"
             value={form.email}
             onChange={handleChange}
             placeholder="What's your email address?"
-            className="bg-[#020617] py-5 px-5 sm:py-4 rounded-lg text-white placeholder:text-slate-400 placeholder-opacity-100 text-xs sm:text-sm border border-slate-700/60 focus:border-[rgba(34,197,94,0.8)]"
+            className="bg-[#020617] py-4 px-5 rounded-lg text-white placeholder:text-slate-500 text-[13px] border border-slate-700/60 focus:border-[rgba(34,197,94,0.8)]"
           />
         </label>
 
         <label className="flex flex-col">
-          <span className="text-white font-medium mb-2">Your Message</span>
+          <span
+            className={`text-white font-medium mb-2 ${isMobile ? "text-center" : ""}`}
+          >
+            Your Message
+          </span>
           <textarea
             rows={6}
             name="message"
             value={form.message}
             onChange={handleChange}
             placeholder="What would you like to talk about?"
-            className="bg-[#020617] py-5 px-5 sm:py-4 rounded-lg text-white placeholder:text-slate-400 placeholder-opacity-100 text-xs sm:text-sm border border-slate-700/60 focus:border-[rgba(34,197,94,0.8)] resize-none"
+            className="bg-[#020617] py-4 px-5 rounded-lg text-white placeholder:text-slate-500 text-[13px] border border-slate-700/60 focus:border-[rgba(34,197,94,0.8)] resize-none"
           />
         </label>
 
@@ -155,21 +178,41 @@ const Contact = () => {
       {/* layout */}
       <div className="rounded-[32px] px-6 py-10 sm:px-10 sm:py-12 flex xl:flex-row flex-col-reverse gap-10 overflow-hidden">
         {/* LEFT — Form */}
-        <motion.div variants={formVariants} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.4 }} className="flex-[0.9]">
+        <motion.div
+          variants={formVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.4 }}
+          className="flex-[0.9]"
+        >
           {isMobile ? (
-            <div className="bg-[#020617]/80 rounded-2xl p-8 backdrop-blur-sm border border-[rgba(15,23,42,0.9)]" style={{ boxShadow: `0 0 22px rgba(0,0,0,0.85), 0 0 26px rgba(34,197,94,0.4)` }}>
+            <div
+              className="bg-[#020617]/80 rounded-2xl p-8 backdrop-blur-sm border border-[rgba(15,23,42,0.9)]"
+              style={{
+                boxShadow: `0 0 22px rgba(0,0,0,0.85), 0 0 26px rgba(34,197,94,0.4)`,
+              }}
+            >
               <FormContent />
             </div>
           ) : (
-            <ElectricBorder color={ACCENT_HEX} speed={1.1} chaos={0.65} thickness={2} style={{ borderRadius: 20 }}>
-              <div className="bg-[#020617]/80 rounded-2xl p-8 backdrop-blur-sm border border-[rgba(15,23,42,0.9)]" style={{ boxShadow: `0 0 22px rgba(0,0,0,0.85), 0 0 26px rgba(34,197,94,0.4)` }}>
+            <ElectricBorder
+              color={ACCENT_HEX}
+              speed={1.1}
+              chaos={0.65}
+              thickness={2}
+              style={{ borderRadius: 20 }}
+            >
+              <div
+                className="bg-[#020617]/80 rounded-2xl p-8 backdrop-blur-sm border border-[rgba(15,23,42,0.9)]"
+                style={{
+                  boxShadow: `0 0 22px rgba(0,0,0,0.85), 0 0 26px rgba(34,197,94,0.4)`,
+                }}
+              >
                 <FormContent />
               </div>
             </ElectricBorder>
           )}
         </motion.div>
-
-        {/* RIGHT — Network Globe removed */}
       </div>
     </div>
   );

@@ -87,8 +87,11 @@ const About = () => {
       />
 
       <div className="rounded-[32px] px-5 py-8 sm:px-10 sm:py-12">
-        {/* heading */}
-        <motion.div variants={textVariant(0.1)}>
+        {/* ✅ Center heading on mobile, left on larger screens */}
+        <motion.div
+          variants={textVariant(0.1)}
+          className="flex flex-col items-center sm:items-start text-center sm:text-left"
+        >
           <p className={styles.sectionSubText} style={{ color: ACCENT_HEX }}>
             INTRODUCTION
           </p>
