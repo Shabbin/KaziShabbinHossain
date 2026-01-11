@@ -7,102 +7,102 @@ import { SectionWrapper } from "../hoc";
 import { fadeIn, textVariant } from "../utils/motion";
 import { testimonials } from "../constants";
 import ElectricBorder from "./ElectricBorder"; // ⚡ adjust path if needed
+import { useIsMobile } from "../utils/useInMobile"; // <-- import hook
 
 /* 💚 keep accent in one place */
 const ACCENT_HEX = "#22c55e";
 
 /* Empty state – new card design + electric border */
-const EmptyState = () => (
-  <motion.div
-    variants={fadeIn("", "spring", 0.1, 0.75)}
-    className="rounded-2xl"
-    role="status"
-    aria-label="No testimonials yet"
-  >
+const EmptyState = () => {
+  const isMobile = useIsMobile(); // detect mobile
+
+  const content = (
+    <div
+      className="
+        w-full h-full
+        rounded-[20px]
+        bg-[#020617]/95
+        px-6 py-5 sm:px-8 sm:py-6
+        flex flex-col gap-4
+      "
+    >
+      {/* top chip + subtle label row */}
+      <div className="flex items-center justify-between gap-3">
+        <span
+          className="inline-flex w-fit items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wide"
+          style={{
+            color: "rgba(34,197,94,0.95)",
+            background: "rgba(34,197,94,0.12)",
+            border: `1px solid rgba(34,197,94,0.35)`,
+          }}
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M12 2l2.9 6.6 7.1.6-5.3 4.6 1.6 6.8L12 16.9 5.7 20.6l1.6-6.8L2 9.2l7.1-.6L12 2z" />
+          </svg>
+          Early stage
+        </span>
+
+        <span className="text-[11px] text-slate-400/80">Honest by design</span>
+      </div>
+
+      {/* main copy */}
+      <div className="space-y-2">
+        <h3 className="text-white text-2xl sm:text-[26px] font-bold">
+          Real reviews coming soon
+        </h3>
+        <p className="text-secondary text-[14px] sm:text-[15px] leading-relaxed">
+          I don’t use fake testimonials. Once I receive genuine feedback on my
+          work, you’ll see it here—attached to real projects and real people.
+        </p>
+      </div>
+
+      {/* CTA row */}
+      <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
+        <a
+          href="mailto:ambiance0100@gmail.com?subject=Feedback%20on%20your%20portfolio"
+          className="
+            inline-flex items-center justify-center
+            rounded-lg px-4 py-2
+            text-[14px] font-bold
+            focus:outline-none focus:ring-2
+          "
+          style={{
+            background: ACCENT_HEX,
+            color: "#020617",
+            boxShadow: `0 0 12px ${ACCENT_HEX}`,
+            border: `1px solid rgba(34,197,94,0.9)`,
+          }}
+        >
+          Leave feedback
+        </a>
+
+        <span className="text-[12px] sm:text-[13px] text-slate-400/90">
+          Built to be reference-friendly once real clients arrive.
+        </span>
+      </div>
+    </div>
+  );
+
+  // Wrap with ElectricBorder only if NOT mobile
+  return isMobile ? content : (
     <ElectricBorder
       color={ACCENT_HEX}
-      // ⚡ tweak these three to control the vibe:
-      // lower speed = calmer; lower chaos = smoother line; higher thickness = more visible
       speed={0.6}
       chaos={0.7}
       thickness={3}
       style={{ borderRadius: 20 }}
     >
-      <div
-        className="
-          w-full h-full
-          rounded-[20px]
-          bg-[#020617]/95
-          px-6 py-5 sm:px-8 sm:py-6
-          flex flex-col gap-4
-        "
-      >
-        {/* top chip + subtle label row */}
-        <div className="flex items-center justify-between gap-3">
-          <span
-            className="inline-flex w-fit items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wide"
-            style={{
-              color: "rgba(34,197,94,0.95)",
-              background: "rgba(34,197,94,0.12)",
-              border: `1px solid rgba(34,197,94,0.35)`,
-            }}
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path d="M12 2l2.9 6.6 7.1.6-5.3 4.6 1.6 6.8L12 16.9 5.7 20.6l1.6-6.8L2 9.2l7.1-.6L12 2z" />
-            </svg>
-            Early stage
-          </span>
-
-          <span className="text-[11px] text-slate-400/80">
-            Honest by design
-          </span>
-        </div>
-
-        {/* main copy */}
-        <div className="space-y-2">
-          <h3 className="text-white text-2xl sm:text-[26px] font-bold">
-            Real reviews coming soon
-          </h3>
-          <p className="text-secondary text-[14px] sm:text-[15px] leading-relaxed">
-            I don’t use fake testimonials. Once I receive genuine feedback on my
-            work, you’ll see it here—attached to real projects and real people.
-          </p>
-        </div>
-
-        {/* CTA row */}
-        <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
-          <a
-            href="mailto:ambiance0100@gmail.com?subject=Feedback%20on%20your%20portfolio"
-            className="
-              inline-flex items-center justify-center
-              rounded-lg px-4 py-2
-              text-[14px] font-bold
-              focus:outline-none focus:ring-2
-            "
-            style={{
-              background: ACCENT_HEX,
-              color: "#020617",
-              boxShadow: `0 0 12px ${ACCENT_HEX}`,
-              border: `1px solid rgba(34,197,94,0.9)`,
-            }}
-          >
-            Leave feedback
-          </a>
-
-          <span className="text-[12px] sm:text-[13px] text-slate-400/90">
-            Built to be reference-friendly once real clients arrive.
-          </span>
-        </div>
-      </div>
+      {content}
     </ElectricBorder>
-  </motion.div>
-);
+  );
+};
+
 const Feedbacks = () => {
   const hasTestimonials =
     Array.isArray(testimonials) && testimonials.length > 0;
