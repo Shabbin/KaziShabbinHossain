@@ -4,7 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { Decal, Float, OrbitControls, Preload, useTexture } from "@react-three/drei";
 import CanvasLoader from "../Loader";
 import BallMobile from "./ballMobile";
-import { useIsMobile } from "../utils/useIsMobile";
+import { useIsMobile } from "../utils/useInMobile";
 
 const Ball = ({ imgUrl }) => {
   const [decal] = useTexture([imgUrl]);
