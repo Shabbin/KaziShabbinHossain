@@ -15,7 +15,6 @@ const isMobile =
 const ExperienceCard = ({ experience, index }) => {
   const CardInner = (
     <article className="relative rounded-2xl bg-[#020617]/95 px-5 py-6 sm:px-7 sm:py-7 overflow-hidden border border-emerald-500/30 sm:border-none">
-      {/* top accent line */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-[2px]"
         style={{
@@ -104,7 +103,6 @@ const ExperienceCard = ({ experience, index }) => {
         delay: isMobile ? 0 : index * 0.12,
       }}
     >
-      {/* ⚡ Electric border only on desktop */}
       {isMobile ? (
         CardInner
       ) : (
@@ -126,7 +124,6 @@ const ExperienceCard = ({ experience, index }) => {
 const Experience = () => {
   return (
     <div className="relative mt-10 sm:mt-12">
-      {/* section glow (reduced on mobile) */}
       <div
         className="pointer-events-none absolute inset-0 rounded-[32px] -z-10"
         style={{
@@ -142,12 +139,14 @@ const Experience = () => {
       <div className="rounded-[32px] px-5 py-8 sm:px-10 sm:py-12">
         <motion.div variants={textVariant(0.1)}>
           <p
-            className={`${styles.sectionSubText} text-center`}
+            className={`${styles.sectionSubText} text-center md:text-left`}
             style={{ color: ACCENT_HEX }}
           >
             What I have done so far
           </p>
-          <h2 className={`${styles.sectionHeadText} text-center`}>
+          <h2
+            className={`${styles.sectionHeadText} text-center md:text-left`}
+          >
             <span className="relative inline-block">
               Work Experience<span style={{ color: ACCENT_HEX }}>.</span>
             </span>
