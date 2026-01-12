@@ -6,7 +6,9 @@ import { SectionWrapper } from "../hoc";
 import { textVariant } from "../utils/motion";
 import ElectricBorder from "./ElectricBorder";
 
-const ACCENT_HEX = "#22c55e";
+const ACCENT_HEX = "#22c55e"; // Shabbin-like glow
+const SHABBIN_GREEN = "#22c55e"; // Shabbin-like text color
+const DARK_GREEN = "#15803d"; // normal text color
 
 // ✅ mobile detector
 const isMobile =
@@ -24,7 +26,10 @@ const ExperienceCard = ({ experience, index }) => {
       />
 
       <div className="flex items-start gap-4">
-        <div className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-slate-900 flex items-center justify-center shadow-[0_0_12px_rgba(34,197,94,0.6)]">
+        <div
+          className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-slate-900 flex items-center justify-center shadow-[0_0_12px_rgba(34,197,94,0.6)]"
+          style={{ color: DARK_GREEN }}
+        >
           <img
             src={experience.icon}
             alt={experience.company_name}
@@ -35,10 +40,16 @@ const ExperienceCard = ({ experience, index }) => {
         <div className="flex-1">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <div>
-              <h3 className="text-white text-[18px] sm:text-[20px] font-bold">
+              <h3
+                className="text-[18px] sm:text-[20px] font-bold"
+                style={{ color: DARK_GREEN }}
+              >
                 {experience.title}
               </h3>
-              <p className="text-secondary text-[14px] sm:text-[15px] font-semibold">
+              <p
+                className="text-[14px] sm:text-[15px] font-semibold"
+                style={{ color: DARK_GREEN }}
+              >
                 {experience.company_name}
               </p>
             </div>
@@ -66,7 +77,8 @@ const ExperienceCard = ({ experience, index }) => {
             {experience.points.map((point, idx) => (
               <li
                 key={`experience-point-${index}-${idx}`}
-                className="text-white-100 text-[13px] sm:text-[14px] pl-1 tracking-wider"
+                className="text-[13px] sm:text-[14px] pl-1 tracking-wider"
+                style={{ color: DARK_GREEN }}
               >
                 {typeof point === "string" ? (
                   point
@@ -140,15 +152,23 @@ const Experience = () => {
         <motion.div variants={textVariant(0.1)}>
           <p
             className={`${styles.sectionSubText} text-center md:text-left`}
-            style={{ color: ACCENT_HEX }}
+            style={{ color: SHABBIN_GREEN }}
           >
             What I have done so far
           </p>
           <h2
             className={`${styles.sectionHeadText} text-center md:text-left`}
+            style={{
+              color: SHABBIN_GREEN,
+              textShadow: `
+                0 0 2px ${ACCENT_HEX},
+                0 0 6px ${ACCENT_HEX},
+                0 0 12px rgba(34,197,94,0.4)
+              `, // Shabbin-like soft glow
+            }}
           >
             <span className="relative inline-block">
-              Work Experience<span style={{ color: ACCENT_HEX }}>.</span>
+              Work Experience<span style={{ color: SHABBIN_GREEN }}>.</span>
             </span>
           </h2>
         </motion.div>

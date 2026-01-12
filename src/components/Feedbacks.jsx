@@ -8,7 +8,9 @@ import { testimonials } from "../constants";
 import ElectricBorder from "./ElectricBorder";
 import { useIsMobile } from "../utils/useInMobile";
 
-const ACCENT_HEX = "#22c55e";
+const ACCENT_HEX = "#22c55e";       // Shabbin-like glow
+const SHABBIN_GREEN = "#22c55e";    // Shabbin-like text color
+const DARK_GREEN = "#15803d";       // normal dark green for body text
 
 const EmptyState = () => {
   const isMobile = useIsMobile();
@@ -28,7 +30,7 @@ const EmptyState = () => {
         <span
           className="inline-flex w-fit items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wide"
           style={{
-            color: "rgba(34,197,94,0.95)",
+            color: SHABBIN_GREEN,
             background: "rgba(34,197,94,0.12)",
             border: `1px solid rgba(34,197,94,0.35)`,
           }}
@@ -46,15 +48,15 @@ const EmptyState = () => {
         </span>
 
         {!isMobile && (
-          <span className="text-[11px] text-slate-400/80">Honest by design</span>
+          <span className="text-[11px]" style={{ color: SHABBIN_GREEN + "cc" }}>Honest by design</span>
         )}
       </div>
 
       <div className="space-y-2">
-        <h3 className="text-white text-2xl sm:text-[26px] font-bold">
+        <h3 className="text-2xl sm:text-[26px] font-bold" style={{ color: SHABBIN_GREEN, textShadow: `0 0 4px ${ACCENT_HEX}, 0 0 10px ${ACCENT_HEX}` }}>
           Real reviews coming soon
         </h3>
-        <p className="text-secondary text-[14px] sm:text-[15px] leading-relaxed">
+        <p className="text-[14px] sm:text-[15px] leading-relaxed" style={{ color: DARK_GREEN }}>
           I don’t use fake testimonials. Once I receive genuine feedback on my
           work, you’ll see it here—attached to real projects and real people.
         </p>
@@ -70,7 +72,7 @@ const EmptyState = () => {
             focus:outline-none focus:ring-2
           "
           style={{
-            background: ACCENT_HEX,
+            background: SHABBIN_GREEN,
             color: "#020617",
             boxShadow: `0 0 12px ${ACCENT_HEX}`,
             border: `1px solid rgba(34,197,94,0.9)`,
@@ -79,7 +81,7 @@ const EmptyState = () => {
           Leave feedback
         </a>
 
-        <span className="text-[12px] sm:text-[13px] text-slate-400/90">
+        <span className="text-[12px] sm:text-[13px]" style={{ color: DARK_GREEN + "cc" }}>
           Built to be reference-friendly once real clients arrive.
         </span>
       </div>
@@ -101,11 +103,11 @@ const EmptyState = () => {
 
 const Feedbacks = () => {
   const isMobile = useIsMobile();
-  const hasTestimonials =
-    Array.isArray(testimonials) && testimonials.length > 0;
+  const hasTestimonials = Array.isArray(testimonials) && testimonials.length > 0;
 
   return (
     <div className="relative mt-16">
+      {/* Background glow */}
       <div
         className="pointer-events-none absolute inset-0 rounded-[32px] -z-10"
         style={{
@@ -119,16 +121,20 @@ const Feedbacks = () => {
         <motion.div variants={textVariant(0.1)}>
           <p
             className={`${styles.sectionSubText} ${isMobile ? "text-center" : ""}`}
-            style={{ color: ACCENT_HEX }}
+            style={{ color: SHABBIN_GREEN }}
           >
             What others say
           </p>
           <h2
             className={`${styles.sectionHeadText} ${isMobile ? "text-center" : ""}`}
+            style={{
+              color: SHABBIN_GREEN,
+              textShadow: `0 0 4px ${ACCENT_HEX}, 0 0 10px ${ACCENT_HEX}`, // soft Shabbin-like glow
+            }}
           >
             <span className="relative inline-block">
               Testimonials
-              <span style={{ color: ACCENT_HEX }}>.</span>
+              <span style={{ color: SHABBIN_GREEN }}>.</span>
               <span
                 className={`absolute -bottom-2 h-[2px] w-12 rounded-full`}
                 style={{
@@ -142,7 +148,6 @@ const Feedbacks = () => {
           </h2>
         </motion.div>
 
-        {/* ✅ Reduce vertical gap here */}
         <div className={`mt-6 sm:mt-8 flex flex-wrap gap-7 ${isMobile ? "justify-center" : ""}`}>
           {hasTestimonials ? (
             testimonials.map((t, index) => (
@@ -153,16 +158,13 @@ const Feedbacks = () => {
                 style={{
                   background: "#020617",
                   border: `1px solid rgba(34,197,94,0.55)`,
-                  boxShadow: `
-                    0 0 22px rgba(34,197,94,0.7),
-                    0 0 16px rgba(0,0,0,0.9)
-                  `,
+                  boxShadow: `0 0 22px rgba(34,197,94,0.7), 0 0 16px rgba(0,0,0,0.9)`,
                 }}
               >
                 <p
                   className="font-black text-[48px] leading-none select-none"
                   style={{
-                    color: ACCENT_HEX,
+                    color: SHABBIN_GREEN,
                     textShadow: `0 0 12px ${ACCENT_HEX}`,
                   }}
                 >
@@ -170,16 +172,16 @@ const Feedbacks = () => {
                 </p>
 
                 <div className="mt-3">
-                  <p className="text-white tracking-wider text-[17px] leading-relaxed">
+                  <p className="tracking-wider text-[17px] leading-relaxed" style={{ color: DARK_GREEN }}>
                     {t.testimonial}
                   </p>
 
                   <div className="mt-7 flex justify-between items-center gap-1">
                     <div className="flex-1 flex flex-col">
-                      <p className="text-white font-medium text-[16px]">
-                        <span style={{ color: ACCENT_HEX }}>@</span> {t.name}
+                      <p className="font-medium text-[16px]" style={{ color: DARK_GREEN }}>
+                        <span style={{ color: SHABBIN_GREEN }}>@</span> {t.name}
                       </p>
-                      <p className="mt-1 text-secondary text-[12px]">
+                      <p className="mt-1 text-[12px]" style={{ color: DARK_GREEN + "aa" }}>
                         {t.designation} of {t.company}
                       </p>
                     </div>

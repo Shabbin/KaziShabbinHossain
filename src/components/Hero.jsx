@@ -27,7 +27,9 @@ const Hero = ({ isMenuOpen }) => {
   }, []);
 
   useEffect(() => {
-    // Typing effect: first heading, then punchline
+    // Typing effect for desktop only
+    if (isMobile) return;
+
     let indexH = 0;
     let indexP = 0;
 
@@ -36,20 +38,16 @@ const Hero = ({ isMenuOpen }) => {
       indexH++;
       if (indexH === headingText.length) {
         clearInterval(typeHeading);
-
-        // start punchline typing after heading finishes
         const typePunchline = setInterval(() => {
           setTypedPunchline(punchlineText.slice(0, indexP + 1));
           indexP++;
           if (indexP === punchlineText.length) clearInterval(typePunchline);
-        }, 60); // punchline typing slower
+        }, 60);
       }
-    }, 120); // heading typing speed
+    }, 120);
 
-    return () => {
-      clearInterval(typeHeading);
-    };
-  }, []);
+    return () => clearInterval(typeHeading);
+  }, [isMobile]);
 
   const handleMouseDown = (e) => {
     if (!isMobile) {
@@ -86,15 +84,13 @@ const Hero = ({ isMenuOpen }) => {
       <div
         className="absolute inset-0 z-0"
         style={{
-          background: `
-            radial-gradient(
-              100% 65% at 50% 28%,
-              rgba(22,163,74,0.10) 0%,
-              rgba(0,0,0,0.78) 42%,
-              rgba(0,0,0,0.92) 70%,
-              rgba(0,0,0,0.98) 100%
-            )
-          `,
+          background: `radial-gradient(
+            100% 65% at 50% 28%,
+            rgba(22,163,74,0.10) 0%,
+            rgba(0,0,0,0.78) 42%,
+            rgba(0,0,0,0.92) 70%,
+            rgba(0,0,0,0.98) 100%
+          )`,
         }}
       />
 
@@ -105,12 +101,12 @@ const Hero = ({ isMenuOpen }) => {
             hue={ACCENT_HUE}
             xOffset={mousePos.x}
             yOffset={mousePos.y}
-            speed={1.4}              
-            intensity={isDragging ? 4.0 : 2.8} 
-            size={1.2}               
-            glow={2.2}               
+            speed={1.4}
+            intensity={isDragging ? 4.0 : 2.8}
+            size={1.2}
+            glow={2.2}
             isActive={isDragging}
-            randomFlicker={true}     
+            randomFlicker={true}
           />
         </div>
       )}
@@ -133,63 +129,46 @@ const Hero = ({ isMenuOpen }) => {
         style={{ pointerEvents: isMenuOpen ? "none" : "auto" }}
       >
         <div className="flex flex-col items-center gap-2">
-          {isMobile ? (
-            <>
-              <h1
-                className="text-4xl font-bold text-center"
-                style={{ color: ACCENT_HEX }}
-              >
-                {headingText}
-              </h1>
-              <p className="text-center" style={{ color: ACCENT_HEX }}>
-                {punchlineText}
-              </p>
-            </>
-          ) : (
-            <>
-              {/* Heading typing */}
-              <div
-                className={`${styles.heroHeadText} flex flex-wrap gap-2 justify-center`}
-                style={{
-                  color: ACCENT_HEX,
-                  textShadow: `0 0 4px ${ACCENT_HEX}, 0 0 12px ${ACCENT_HEX}`,
-                }}
-              >
-                {typedHeading.split("").map((char, index) => (
-                  <span key={index} className="inline-block">
-                    {char === " " ? "\u00A0" : char}
-                  </span>
-                ))}
-              </div>
+          {/* Heading */}
+          <h1
+            className={`text-4xl font-bold text-center ${styles.heroHeadText}`}
+            style={{
+              color: ACCENT_HEX,
+              textShadow: `0 0 4px ${ACCENT_HEX}, 0 0 12px ${ACCENT_HEX}`,
+            }}
+          >
+            {isMobile ? headingText : typedHeading}
+          </h1>
 
-              {/* Punchline typing + subtle floating */}
-              <motion.div
-                animate={{
-                  x: [0, 1.5, -1, 0.5, 0], // subtle horizontal drift
-                  y: [0, -1.5, 1, -0.5, 0], // subtle vertical drift
-                }}
-                transition={{
-                  duration: 8,   // long duration to confuse the eye
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className={`${styles.heroSubText} mt-2 text-center`}
-                style={{ color: ACCENT_HEX }}
-              >
-                {typedPunchline.split("").map((char, index) => (
-                  <span key={index} className="inline-block">
-                    {char === " " ? "\u00A0" : char}
-                  </span>
-                ))}
-              </motion.div>
-            </>
-          )}
+          {/* Punchline */}
+          <motion.div
+            animate={{
+              x: [0, 1.5, -1, 0.5, 0],
+              y: [0, -1.5, 1, -0.5, 0],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className={`${styles.heroSubText} mt-2 text-center`}
+            style={{
+              color: ACCENT_HEX,
+              textShadow: `0 0 4px ${ACCENT_HEX}, 0 0 12px ${ACCENT_HEX}`,
+            }}
+          >
+            {(isMobile ? punchlineText : typedPunchline).split("").map((char, index) => (
+              <span key={index} className="inline-block">
+                {char === " " ? "\u00A0" : char}
+              </span>
+            ))}
+          </motion.div>
         </div>
 
         {/* Social icons */}
-        <div className="mt-6 flex gap-6 justify-center">
+        <div className="mt-6 flex gap-10 justify-center">
           {[FaGithub, FaFacebookF, FaInstagram].map((Icon, i) => (
-            <a
+            <motion.a
               key={i}
               href={
                 i === 0
@@ -200,15 +179,38 @@ const Hero = ({ isMenuOpen }) => {
               }
               target="_blank"
               rel="noopener noreferrer"
-              className="p-4 rounded-full hover:scale-110 transition-transform"
+              className="p-4 rounded-full hover:scale-110 transition-transform relative"
               style={{
-                backgroundColor: "rgba(0,0,0,0.5)",
+                background: "radial-gradient(circle, #16a34a33 0%, transparent 70%)",
                 color: ACCENT_HEX,
-                boxShadow: `0 0 6px ${ACCENT_HEX}44`,
+                boxShadow: `0 0 10px #16a34aaa, 0 0 20px #16a34a88, 0 0 30px #16a34a66`,
               }}
+              // Turn off floating animation on mobile
+              animate={
+                isMobile
+                  ? undefined
+                  : {
+                      x: [0, 2, -2, 1, 0],
+                      y: [0, -2, 2, -1, 0],
+                      boxShadow: [
+                        `0 0 10px #16a34aaa, 0 0 20px #16a34a88, 0 0 30px #16a34a66`,
+                        `0 0 14px #16a34aff, 0 0 28px #16a34aff, 0 0 40px #16a34aff`,
+                        `0 0 10px #16a34aaa, 0 0 20px #16a34a88, 0 0 30px #16a34a66`,
+                      ],
+                    }
+              }
+              transition={
+                isMobile
+                  ? undefined
+                  : {
+                      duration: 6 + i,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }
+              }
             >
               <Icon size={isMobile ? 20 : 26} />
-            </a>
+            </motion.a>
           ))}
         </div>
       </div>

@@ -83,6 +83,10 @@ const Contact = () => {
       </p>
       <h3
         className={`${styles.sectionHeadText} ${isMobile ? "text-center" : ""}`}
+        style={{
+          color: ACCENT_HEX,
+          textShadow: `0 0 8px ${ACCENT_HEX}, 0 0 12px ${ACCENT_HEX}`, // 🌟 glow applied
+        }}
       >
         <span className="relative inline-block">
           Contact
@@ -100,7 +104,8 @@ const Contact = () => {
       <form ref={formRef} onSubmit={handleSubmit} className="mt-10 flex flex-col gap-7">
         <label className="flex flex-col">
           <span
-            className={`text-white font-medium mb-2 ${isMobile ? "text-center" : ""}`}
+            className={`text-[${isMobile ? "center" : "left"}] font-medium mb-2`}
+            style={{ color: ACCENT_HEX }}
           >
             Your Name
           </span>
@@ -116,7 +121,8 @@ const Contact = () => {
 
         <label className="flex flex-col">
           <span
-            className={`text-white font-medium mb-2 ${isMobile ? "text-center" : ""}`}
+            className={`text-[${isMobile ? "center" : "left"}] font-medium mb-2`}
+            style={{ color: ACCENT_HEX }}
           >
             Your Email
           </span>
@@ -132,7 +138,8 @@ const Contact = () => {
 
         <label className="flex flex-col">
           <span
-            className={`text-white font-medium mb-2 ${isMobile ? "text-center" : ""}`}
+            className={`text-[${isMobile ? "center" : "left"}] font-medium mb-2`}
+            style={{ color: ACCENT_HEX }}
           >
             Your Message
           </span>
