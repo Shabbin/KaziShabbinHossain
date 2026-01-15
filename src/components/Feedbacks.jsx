@@ -26,45 +26,20 @@ const EmptyState = () => {
         ${isMobile ? "items-center text-center" : ""}
       `}
     >
-      <div className={`flex items-center justify-between gap-3 ${isMobile ? "justify-center" : ""}`}>
-        <span
-          className="inline-flex w-fit items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wide"
-          style={{
-            color: SHABBIN_GREEN,
-            background: "rgba(34,197,94,0.12)",
-            border: `1px solid rgba(34,197,94,0.35)`,
-          }}
-        >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path d="M12 2l2.9 6.6 7.1.6-5.3 4.6 1.6 6.8L12 16.9 5.7 20.6l1.6-6.8L2 9.2l7.1-.6L12 2z" />
-          </svg>
-          Early stage
-        </span>
-
-        {!isMobile && (
-          <span className="text-[11px]" style={{ color: SHABBIN_GREEN + "cc" }}>Honest by design</span>
-        )}
-      </div>
-
-      <div className="space-y-2">
+      <div className="space-y-2 text-center">
         <h3 className="text-2xl sm:text-[26px] font-bold" style={{ color: SHABBIN_GREEN, textShadow: `0 0 4px ${ACCENT_HEX}, 0 0 10px ${ACCENT_HEX}` }}>
-          Real reviews coming soon
+          Real feedback coming soon
         </h3>
         <p className="text-[14px] sm:text-[15px] leading-relaxed" style={{ color: DARK_GREEN }}>
-          I don’t use fake testimonials. Once I receive genuine feedback on my
-          work, you’ll see it here—attached to real projects and real people.
+          Genuine feedback from real people, on real projects.
         </p>
       </div>
 
-      <div className={`mt-2 flex flex-wrap items-center gap-3 ${isMobile ? "justify-center" : "justify-between"}`}>
+      <div className={`mt-4 flex flex-wrap items-center gap-3 ${isMobile ? "justify-center" : "justify-between"}`}>
         <a
-          href="mailto:ambiance0100@gmail.com?subject=Feedback%20on%20your%20portfolio"
+          href="https://docs.google.com/forms/d/e/1FAIpQLSfGGNg2EFEHJIRK5LX7xvKB1qWKCAEiGvAGmMaNR4YU0QJA2g/viewform?usp=publish-editor"
+          target="_blank"
+          rel="noopener noreferrer"
           className="
             inline-flex items-center justify-center
             rounded-lg px-4 py-2
@@ -82,7 +57,7 @@ const EmptyState = () => {
         </a>
 
         <span className="text-[12px] sm:text-[13px]" style={{ color: DARK_GREEN + "cc" }}>
-          Built to be reference-friendly once real clients arrive.
+          Help me grow by leaving your feedback.
         </span>
       </div>
     </div>
@@ -129,7 +104,7 @@ const Feedbacks = () => {
             className={`${styles.sectionHeadText} ${isMobile ? "text-center" : ""}`}
             style={{
               color: SHABBIN_GREEN,
-              textShadow: `0 0 4px ${ACCENT_HEX}, 0 0 10px ${ACCENT_HEX}`, // soft Shabbin-like glow
+              textShadow: `0 0 4px ${ACCENT_HEX}, 0 0 10px ${ACCENT_HEX}`,
             }}
           >
             <span className="relative inline-block">
